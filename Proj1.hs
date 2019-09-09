@@ -10,11 +10,11 @@ module Proj1 (feedback, initialGuess, nextGuess, GameState) where
     data GameState = GameState Int
 
     feedback :: [Card] -> [Card] -> (Int, Int, Int, Int, Int)
-    feedback t g = (feedback1 t g,
-                    feedback2 t g,
-                    feedback3 t g,
-                    feedback4 t g,
-                    feedback5 t g)
+    feedback ts gs = (feedback1 ts gs,
+                      feedback2 ts gs,
+                      feedback3 ts gs,
+                      feedback4 ts gs,
+                      feedback5 ts gs)
 
     feedback1 :: [Card] -> [Card] -> Int
     feedback1 t g = length (intersect t g)
@@ -24,29 +24,33 @@ module Proj1 (feedback, initialGuess, nextGuess, GameState) where
     feedback2 ((Card _ r):ts) gs
         | r < (sgs !! 0) = 1 + feedback2 ts gs
         | otherwise      = 0 + feedback2 ts gs
-        where sgs = sort [r | (Card _ r) <- gs]
+        where sgs = sort [rank g | g <- gs]
 
     feedback3 :: [Card] -> [Card] -> Int
-    feedback3 t g
-        | otherwise = sum [min (length tr) (length gr) | tr <- trs, gr <- grs, tr !! 0 == gr !! 0]
-        where trs = group (sort [r | (Card _ r) <- t])
-              grs = group (sort [r | (Card _ r) <- g])
+    feedback3 ts gs
+        | otherwise = sum [min (length t_rank) (length g_rank) | t_rank <- t_ranks,
+                           g_rank <- g_ranks,
+                           t_rank !! 0 == g_rank !! 0]
+        where t_ranks = group (sort [rank t | t <- ts])
+              g_ranks = group (sort [rank g | g <- gs])
  
     feedback4 :: [Card] -> [Card] -> Int
     feedback4 [] _ = 0
     feedback4 ((Card _ r):ts) gs
         | r > (sgs !! 0) = 1 + feedback4 ts gs
         | otherwise      = 0 + feedback4 ts gs
-        where sgs = reverse (sort [r | (Card _ r) <- gs])
+        where sgs = reverse (sort [rank g | g <- gs])
 
     feedback5 :: [Card] -> [Card] -> Int
-    feedback5 t g
-        | otherwise = sum [min (length ts) (length gs) | ts <- tss, gs <- gss, ts !! 0 == gs !! 0]
-        where tss = group (sort [s | (Card s _) <- t])
-              gss = group (sort [s | (Card s _) <- g])
+    feedback5 ts gs
+        | otherwise = sum [min (length t_suit) (length g_suit) | t_suit <- t_suits,
+                           g_suit <- g_suits,
+                           t_suit !! 0 == g_suit !! 0]
+        where t_suits = group (sort [suit t | t <- ts])
+              g_suits = group (sort [suit g | g <- gs])
 
     initialGuess :: Int -> ([Card], GameState)
-    initialGuess _ = ([], GameState 0)
+    initialGuess x = ([], GameState 0)
 
     nextGuess :: ([Card], GameState) -> (Int, Int, Int, Int, Int) -> ([Card], GameState)
     nextGuess _ _ = ([], GameState 0)
