@@ -10,8 +10,7 @@ module Proj1 (feedback,
 import Data.List
 import Card
 
-data GameState = GameState {not_guessed::[[Card]],
-                            feedbacks::[(Int, Int, Int, Int, Int)]}
+data GameState = GameState {not_guessed::[[Card]]}
 
 feedback :: [Card] -> [Card] -> (Int, Int, Int, Int, Int)
 feedback ts gs = (feedback1 ts gs,
@@ -57,13 +56,17 @@ feedback5 ts gs = sum [min (length t_suit) (length g_suit) | t_suit <- t_suits,
     g_suits = group (sort [suit g | g <- gs])
 
 initialGuess :: Int -> ([Card], GameState)
-initialGuess x = (guess, (GameState (delete guess all_guesses) []))
+initialGuess x = (guess, (GameState all_guesses))
   where 
     all_guesses = subseqOfSize x ([minBound..maxBound]::[Card])
     guess = all_guesses !! (length all_guesses `div` 2)
 
 nextGuess :: ([Card], GameState) -> (Int, Int, Int, Int, Int) -> ([Card], GameState)
-nextGuess _ _ = ([], (GameState [] [(0,0,0,0,0)]))
+nextGuess (guess, gs) f = (next_guess, new_state)
+  where
+    new_state = GameState (delete guess (not_guessed gs))
+    possible_guesses = [g | g <- not_guessed new_state, (feedback g guess) == f]
+    next_guess = possible_guesses !! (length possible_guesses `div` 2)
 
 subseqOfSize :: Ord a => Int -> [a] -> [[a]]
 subseqOfSize 0 _  = [[]]
