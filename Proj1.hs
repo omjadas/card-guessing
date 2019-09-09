@@ -33,8 +33,8 @@ feedback2 ((Card _ r):ts) gs
 feedback3 :: [Card] -> [Card] -> Int
 feedback3 ts gs
     | otherwise = sum [min (length t_rank) (length g_rank) | t_rank <- t_ranks,
-                      g_rank <- g_ranks,
-                      t_rank !! 0 == g_rank !! 0]
+                       g_rank <- g_ranks,
+                       t_rank !! 0 == g_rank !! 0]
   where
     t_ranks = group (sort [rank t | t <- ts])
     g_ranks = group (sort [rank g | g <- gs])
