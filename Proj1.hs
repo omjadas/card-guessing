@@ -49,8 +49,8 @@ feedback4 ((Card _ r):ts) gs
 
 feedback5 :: [Card] -> [Card] -> Int
 feedback5 ts gs = sum [min (length t_suit) (length g_suit) | t_suit <- t_suits,
-                                   g_suit <- g_suits,
-                                   t_suit !! 0 == g_suit !! 0]
+                       g_suit <- g_suits,
+                       t_suit !! 0 == g_suit !! 0]
   where
     t_suits = group (sort [suit t | t <- ts])
     g_suits = group (sort [suit g | g <- gs])
@@ -59,19 +59,22 @@ initialGuess :: Int -> ([Card], GameState)
 initialGuess x = (guess, (GameState all_guesses))
   where 
     all_guesses = subseqOfSize x ([minBound..maxBound]::[Card])
-    guess = all_guesses !! (length all_guesses `div` 2)
+    guess       = all_guesses !! (length all_guesses `div` 2)
 
 nextGuess :: ([Card], GameState) -> (Int, Int, Int, Int, Int) -> ([Card], GameState)
 nextGuess (guess, gs) f = (next_guess, new_state)
   where
     new_state = GameState (delete guess (not_guessed gs))
-    possible_guesses = [g | g <- not_guessed new_state, (feedback g guess) == f]
-    next_guess = possible_guesses !! (length possible_guesses `div` 2)
+    possible_guesses = [g | g <- not_guessed new_state,
+                        (feedback g guess) == f]
+    next_guess       = possible_guesses !! (length possible_guesses `div` 2)
 
 subseqOfSize :: Ord a => Int -> [a] -> [[a]]
 subseqOfSize 0 _  = [[]]
 subseqOfSize 1 xs = [[x] | x <- xs]
 subseqOfSize n xs
-    | otherwise = [[x] ++ y | x <- xs, y <- minus1, x < (y!!0)]
+    | otherwise = [[x] ++ y | x <- xs,
+                   y <- minus1,
+                   x < (y!!0)]
   where
     minus1 = subseqOfSize (n-1) xs
