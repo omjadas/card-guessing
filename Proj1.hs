@@ -94,7 +94,7 @@ initialGuess :: Int -> ([Card], GameState)
 initialGuess n = (guess, (GameState allGuesses))
   where
     allGuesses = subseqOfSize n ([minBound .. maxBound] :: [Card])
-    guess       = allGuesses !! (length allGuesses `div` 2)
+    guess      = allGuesses !! (length allGuesses `div` 2)
 
 -- | 'nextGuess' takes a pair of a guess and GameSate and a 5-tuple of Ints
 --   representing the feedback from the previous guess. The output is a pair
