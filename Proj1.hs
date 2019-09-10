@@ -6,11 +6,11 @@
 --   project specification.
 
 module Proj1
-      ( feedback
-      , initialGuess
-      , nextGuess
-      , GameState
-      ) where
+       ( feedback
+       , initialGuess
+       , nextGuess
+       , GameState
+       ) where
 
 import Data.List
 import Card
@@ -35,7 +35,7 @@ feedback targets guesses =
 --   answer.
 
 feedback1 :: [Card] -> [Card] -> Int
-feedback1 t g = length (t `intersect` g)
+feedback1 targets guesses = length (targets `intersect` guesses)
 
 -- | 'feedback2' determines how many cards in the answer have a rank lower
 --   than the lowest rank in the guess.
