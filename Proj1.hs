@@ -120,4 +120,5 @@ subseqOfSize :: Ord a => Int -> [a] -> [[a]]
 subseqOfSize 0 _  = [[]]
 subseqOfSize 1 xs = [ [x] | x <- xs ]
 subseqOfSize n xs = [ [x] ++ y | x <- xs, y <- minus1, x < (y !! 0) ]
-    where minus1 = subseqOfSize (n - 1) xs
+  where
+    minus1 = subseqOfSize (n - 1) xs
